@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": "2026-03-15T09:49:36.275945",
+    "lastUpdated": "2026-03-15T09:57:43.283473",
     "engineVersion": "v2.3",
     "engineStatus": "DEPLOYED",
     "scheduledTaskActive": true
@@ -170,9 +170,9 @@
     {
       "id": 48,
       "date": "2026-03-15",
-      "type": "Thin Slate Single",
-      "picks": "OKC Thunder ML YES (78\u00a2) \u2014 thin slate, 1 edge night",
-      "risk": 30.0,
+      "type": "3-Leg ML Triple",
+      "picks": "OKC ML YES (78\u00a2) + CLE ML YES (90\u00a2) + NYK ML YES (89\u00a2)",
+      "risk": 50.0,
       "pl": null,
       "result": "TBD",
       "balance": 294.85
@@ -183,16 +183,18 @@
     "games": "UTA@SAC, GSW@NYK, POR@PHI, IND@MIL, DET@TOR, DAL@CLE, MIN@OKC",
     "bets": [
       {
-        "label": "BET 48 \u2014 THIN SLATE SINGLE STRAIGHT",
-        "type": "Thin Slate Single Straight",
+        "label": "BET 48 \u2014 3-LEG ML TRIPLE",
+        "type": "3-Leg ML",
         "legs": [
-          "OKC Thunder ML YES @ 78\u00a2 \u2014 $30 risk \u2192 $38.46 payout \u2192 +$8.46 profit"
+          "OKC ML YES (78\u00a2)",
+          "CLE ML YES (90\u00a2)",
+          "NYK ML YES (89\u00a2)"
         ],
         "risk": 0,
         "payout": 0,
         "multiplier": 0,
         "status": "NOT YET PLACED",
-        "description": "OKC Thunder ML YES @ 78\u00a2 \u2014 $30 risk \u2192 $38.46 payout \u2192 +$8.46 profit"
+        "description": "OKC ML YES (78\u00a2) + CLE ML YES (90\u00a2) + NYK ML YES (89\u00a2)"
       },
       {
         "label": "BET 49 \u2014 STABILIZER",
