@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": "2026-03-15T09:57:43.283473",
+    "lastUpdated": "2026-03-15T10:02:17.453640",
     "engineVersion": "v2.3",
     "engineStatus": "DEPLOYED",
     "scheduledTaskActive": true
@@ -171,8 +171,8 @@
       "id": 48,
       "date": "2026-03-15",
       "type": "3-Leg ML Triple",
-      "picks": "OKC ML YES (78\u00a2) + CLE ML YES (90\u00a2) + NYK ML YES (89\u00a2)",
-      "risk": 50.0,
+      "picks": "OKC ML YES + CLE ML YES + NYK ML YES \u2014 PLACED 10:00am",
+      "risk": 49.77,
       "pl": null,
       "result": "TBD",
       "balance": 294.85
@@ -193,7 +193,7 @@
         "risk": 0,
         "payout": 0,
         "multiplier": 0,
-        "status": "NOT YET PLACED",
+        "status": "PLACED",
         "description": "OKC ML YES (78\u00a2) + CLE ML YES (90\u00a2) + NYK ML YES (89\u00a2)"
       },
       {
