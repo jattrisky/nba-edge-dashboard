@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": "2026-03-14T22:11:48.916710",
+    "lastUpdated": "2026-03-15T09:49:36.275945",
     "engineVersion": "v2.3",
     "engineStatus": "DEPLOYED",
     "scheduledTaskActive": true
@@ -55,18 +55,14 @@
     },
     {
       "date": "2026-03-12",
-      "balance": 257.46
-    },
-    {
-      "date": "2026-03-12b",
       "balance": 256.61
     },
     {
-      "date": "2026-03-12c",
+      "date": "2026-03-12b",
       "balance": 265.66
     },
     {
-      "date": "2026-03-12d",
+      "date": "2026-03-12c",
       "balance": 289.21
     },
     {
@@ -91,16 +87,6 @@
     }
   ],
   "bets": [
-    {
-      "id": 38,
-      "date": "2026-03-12",
-      "type": "3-Leg ML Core",
-      "picks": "OKC ML \u2705 + SAS ML \u274c + MIA ML \u2705",
-      "risk": 31.75,
-      "pl": -31.75,
-      "result": "L",
-      "balance": 257.46
-    },
     {
       "id": 39,
       "date": "2026-03-12",
@@ -180,28 +166,36 @@
       "pl": 9.45,
       "result": "W",
       "balance": 294.85
+    },
+    {
+      "id": 48,
+      "date": "2026-03-15",
+      "type": "Thin Slate Single",
+      "picks": "OKC Thunder ML YES (78\u00a2) \u2014 thin slate, 1 edge night",
+      "risk": 30.0,
+      "pl": null,
+      "result": "TBD",
+      "balance": 294.85
     }
   ],
   "todaysPicks": {
-    "date": "2026-03-14",
-    "games": "SAC@LAC, DEN@LAL, ORL@MIA, WAS@BOS, CHA@SAS, MIL@ATL, BKN@PHI",
+    "date": "2026-03-15",
+    "games": "UTA@SAC, GSW@NYK, POR@PHI, IND@MIL, DET@TOR, DAL@CLE, MIN@OKC",
     "bets": [
       {
-        "label": "BET 45 \u2014 TRIPLE",
-        "type": "3-Leg ML",
+        "label": "BET 48 \u2014 THIN SLATE SINGLE STRAIGHT",
+        "type": "Thin Slate Single Straight",
         "legs": [
-          "ATL ML \u2705",
-          "MIA ML \u274c",
-          "PHI ML \u2705"
+          "OKC Thunder ML YES @ 78\u00a2 \u2014 $30 risk \u2192 $38.46 payout \u2192 +$8.46 profit"
         ],
-        "risk": 54.67,
-        "payout": 143.0,
-        "multiplier": 2.62,
+        "risk": 0,
+        "payout": 0,
+        "multiplier": 0,
         "status": "NOT YET PLACED",
-        "description": "ATL ML \u2705 + MIA ML \u274c + PHI ML \u2705"
+        "description": "OKC Thunder ML YES @ 78\u00a2 \u2014 $30 risk \u2192 $38.46 payout \u2192 +$8.46 profit"
       },
       {
-        "label": "BET 46 \u2014 STABILIZER",
+        "label": "BET 49 \u2014 STABILIZER",
         "type": "SKIPPED",
         "legs": [],
         "risk": 0,
@@ -210,117 +204,24 @@
         "status": "SKIPPED"
       },
       {
-        "label": "BET 47 \u2014 SWING",
-        "type": "3-Leg ML+Prop",
-        "legs": [
-          "ATL ML \u2705",
-          "Luka Don\u010di\u0107 25+ PTS \u2705 (30 PTS)",
-          "PHI ML \u2705"
-        ],
-        "risk": 9.55,
-        "payout": 19.0,
-        "multiplier": 1.99,
-        "status": "NOT YET PLACED",
-        "description": "ATL ML \u2705 + Luka Don\u010di\u0107 25+ PTS \u2705 (30 PTS) + PHI ML \u2705"
+        "label": "BET 50 \u2014 SWING",
+        "type": "SKIPPED",
+        "legs": [],
+        "risk": 0,
+        "payout": 0,
+        "multiplier": 0,
+        "status": "SKIPPED"
       }
     ],
     "injuries": [],
-    "sessionExposure": 64.22,
-    "exposurePct": 18.9,
+    "sessionExposure": 0,
+    "exposurePct": 0,
     "maxProfit": 0,
     "mlEdges": [],
     "propEdges": []
   },
-  "scenarios": [
-    {
-      "bets": [
-        {
-          "label": "BET 45 \u2014 TRIPLE",
-          "result": "W",
-          "pl": 88.33
-        },
-        {
-          "label": "BET 47 \u2014 SWING",
-          "result": "W",
-          "pl": 9.45
-        }
-      ],
-      "totalPL": 97.78,
-      "newBalance": 392.63,
-      "phase": 2,
-      "phaseName": "GROWTH"
-    },
-    {
-      "bets": [
-        {
-          "label": "BET 45 \u2014 TRIPLE",
-          "result": "W",
-          "pl": 88.33
-        },
-        {
-          "label": "BET 47 \u2014 SWING",
-          "result": "L",
-          "pl": -9.55
-        }
-      ],
-      "totalPL": 78.78,
-      "newBalance": 373.63,
-      "phase": 2,
-      "phaseName": "GROWTH"
-    },
-    {
-      "bets": [
-        {
-          "label": "BET 45 \u2014 TRIPLE",
-          "result": "L",
-          "pl": -54.67
-        },
-        {
-          "label": "BET 47 \u2014 SWING",
-          "result": "W",
-          "pl": 9.45
-        }
-      ],
-      "totalPL": -45.22,
-      "newBalance": 249.63,
-      "phase": 1,
-      "phaseName": "SURVIVAL"
-    },
-    {
-      "bets": [
-        {
-          "label": "BET 45 \u2014 TRIPLE",
-          "result": "L",
-          "pl": -54.67
-        },
-        {
-          "label": "BET 47 \u2014 SWING",
-          "result": "L",
-          "pl": -9.55
-        }
-      ],
-      "totalPL": -64.22,
-      "newBalance": 230.63,
-      "phase": 1,
-      "phaseName": "SURVIVAL"
-    }
-  ],
-  "correlations": [
-    {
-      "bet1": "BET 45 \u2014 TRIPLE",
-      "bet2": "BET 47 \u2014 SWING",
-      "sharedLegs": [
-        "ATL ML \u2705",
-        "PHI ML \u2705"
-      ],
-      "bet1Unique": [
-        "MIA ML \u274c"
-      ],
-      "bet2Unique": [
-        "Luka Don\u010di\u0107 25+ PTS \u2705 (30 PTS)"
-      ]
-    }
-  ],
+  "scenarios": [],
+  "correlations": [],
   "backtest": {
     "versions": [
       {
