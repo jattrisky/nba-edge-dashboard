@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": "2026-03-21T22:05:59.295992",
+    "lastUpdated": "2026-03-22T12:13:23.549970",
     "engineVersion": "v2.3",
     "engineStatus": "DEPLOYED",
     "scheduledTaskActive": true
@@ -99,12 +99,54 @@
     }
   ],
   "todaysPicks": {
-    "date": "2026-03-21",
-    "games": "MIL@PHX, PHI@UTA, LAC@DAL, MIA@HOU, IND@SAS, GSW@ATL, MEM@CHA, LAL@ORL, CLE@NOP, OKC@WAS",
-    "bets": [],
+    "date": "2026-03-22",
+    "games": "TOR@PHX, MIN@BOS, WAS@NYK, BKN@SAC, POR@DEN",
+    "bets": [
+      {
+        "label": "BET 67 \u2014 TRIPLE",
+        "type": "3-Leg ML",
+        "legs": [
+          "BOS ML",
+          "DEN ML",
+          "SAC ML \u2014 \u26a0\ufe0f THIN-EDGE SESSION"
+        ],
+        "risk": 0,
+        "payout": 90.0,
+        "multiplier": 0,
+        "status": "NOT YET PLACED",
+        "description": "BOS ML + DEN ML + SAC ML \u2014 \u26a0\ufe0f THIN-EDGE SESSION"
+      },
+      {
+        "label": "BET 68 \u2014 OVERFLOW",
+        "type": "SKIPPED",
+        "legs": [],
+        "risk": 0,
+        "payout": 0,
+        "multiplier": 0,
+        "status": "SKIPPED"
+      },
+      {
+        "label": "BET 69 \u2014 STABILIZER",
+        "type": "SKIPPED",
+        "legs": [],
+        "risk": 0,
+        "payout": 0,
+        "multiplier": 0,
+        "status": "SKIPPED"
+      },
+      {
+        "label": "BET 70 \u2014 SWING",
+        "type": "SKIPPED",
+        "legs": [],
+        "risk": 0,
+        "payout": 0,
+        "multiplier": 0,
+        "status": "SKIPPED"
+      }
+    ],
     "injuries": [],
-    "sessionExposure": 0.0,
-    "exposurePct": 0.0,
+    "sessionExposure": 90.0,
+    "exposurePct": 14.9,
     "maxProfit": 0,
     "mlEdges": [],
     "propEdges": []
