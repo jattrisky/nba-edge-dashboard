@@ -5,102 +5,184 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Edge Engine Dashboard</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0e17;--card:#111827;--card2:#1a2234;--border:#1e293b;--text:#e2e8f0;--muted:#94a3b8;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--amber:#f59e0b;--purple:#a855f7;--cyan:#06b6d4;--emerald:#10b981}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
-a{color:var(--blue)}
-.container{max-width:1280px;margin:0 auto;padding:16px}
-.header{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border);margin-bottom:20px;flex-wrap:wrap;gap:8px}
-.header h1{font-size:1.5rem;font-weight:700;letter-spacing:-0.02em}
-.header h1 span{color:var(--green)}
-.badges{display:flex;gap:8px;flex-wrap:wrap}
-.badge{padding:3px 10px;border-radius:999px;font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
-.badge-green{background:#22c55e22;color:var(--green);border:1px solid #22c55e44}
-.badge-blue{background:#3b82f622;color:var(--blue);border:1px solid #3b82f644}
-.badge-amber{background:#f59e0b22;color:var(--amber);border:1px solid #f59e0b44}
-.badge-purple{background:#a855f722;color:var(--purple);border:1px solid #a855f744}
-.badge-red{background:#ef444422;color:var(--red);border:1px solid #ef444444}
-.grid{display:grid;gap:16px}
-.grid-4{grid-template-columns:repeat(4,1fr)}
-.grid-3{grid-template-columns:repeat(3,1fr)}
-.grid-2{grid-template-columns:repeat(2,1fr)}
-.grid-1{grid-template-columns:1fr}
-@media(max-width:900px){.grid-4,.grid-3{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
-@media(max-width:600px){.grid-4,.grid-3,.grid-2{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative;overflow:hidden}
-.card-dark{background:var(--card2)}
-.card h2{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:8px;font-weight:600}
-.card .big{font-size:2rem;font-weight:700;letter-spacing:-0.02em}
-.card .sub{font-size:0.8rem;color:var(--muted);margin-top:4px}
-.positive{color:var(--green)}
-.negative{color:var(--red)}
-.progress-bar{width:100%;height:8px;background:#1e293b;border-radius:4px;overflow:hidden;margin-top:8px}
-.progress-fill{height:100%;border-radius:4px;transition:width 0.5s}
-table{width:100%;border-collapse:collapse;font-size:0.8rem}
-th{text-align:left;padding:8px 10px;color:var(--muted);font-weight:600;border-bottom:1px solid var(--border);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em}
-td{padding:8px 10px;border-bottom:1px solid #1e293b44}
-tr:hover{background:#ffffff06}
-.status-pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:0.65rem;font-weight:600}
-.status-W{background:#22c55e22;color:var(--green)}
-.status-L{background:#ef444422;color:var(--red)}
-.status-PLACED{background:#3b82f622;color:var(--blue)}
-.status-PENDING{background:#f59e0b22;color:var(--amber)}
-.status-SKIPPED{background:#64748b22;color:#64748b}
-.scenario-grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
-.scenario-card{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;font-size:0.8rem;transition:transform 0.15s}
-.scenario-card:hover{transform:translateY(-2px)}
-.scenario-card.best{border-color:var(--green);background:#22c55e08}
-.scenario-card.worst{border-color:var(--red);background:#ef444408}
-.chart-wrap{position:relative;height:220px}
-.injury-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1e293b44;font-size:0.8rem;flex-wrap:wrap}
-.injury-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.feature-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1e293b44;font-size:0.8rem}
-.feature-status{font-size:0.65rem;padding:2px 6px;border-radius:4px;font-weight:600}
-.kill-tag{display:inline-block;padding:3px 10px;margin:3px;border-radius:4px;background:#ef444418;color:var(--red);font-size:0.75rem;border:1px solid #ef444433}
-.rule-item{padding:6px 0;border-bottom:1px solid #1e293b44;font-size:0.8rem}
-.prop-bar{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:0.8rem}
-.prop-bar-track{flex:1;height:6px;background:#1e293b;border-radius:3px;overflow:hidden}
-.prop-bar-fill{height:100%;border-radius:3px}
-.section-title{font-size:1.1rem;font-weight:700;margin:24px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.footer{text-align:center;padding:24px 0;color:var(--muted);font-size:0.75rem;border-top:1px solid var(--border);margin-top:24px}
-.loading{display:flex;align-items:center;justify-content:center;min-height:60vh;font-size:1.2rem;color:var(--muted)}
-.bet-card{padding:12px;margin-bottom:10px;background:var(--card2);border-radius:10px;border:1px solid var(--border);transition:border-color 0.15s}
-.bet-card:hover{border-color:#3b82f644}
-.bet-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.bet-card-pick{font-weight:700;font-size:0.95rem}
-.bet-card-type{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em}
-.bet-card-thesis{font-size:0.78rem;color:var(--muted);margin-bottom:8px;line-height:1.4}
-.bet-card-stats{display:flex;gap:16px;font-size:0.75rem;color:var(--muted);flex-wrap:wrap}
-.bet-card-stats span{display:flex;align-items:center;gap:4px}
-.edge-badge{padding:2px 8px;border-radius:999px;font-size:0.7rem;font-weight:700;background:#22c55e22;color:var(--green);border:1px solid #22c55e44}
-.edge-badge.hot{background:#ef444422;color:#f97316;border:1px solid #f9731644;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
-.corr-note{font-size:0.75rem;color:var(--muted);padding:4px 0}
+:root{
+  --bg:#060a13;--surface:#0c1220;--card:#111a2e;--card-hover:#162036;
+  --border:#1a2540;--border-light:#243352;
+  --text:#f0f4fc;--text-secondary:#8899b4;--text-muted:#5a6a84;
+  --green:#00e676;--green-dim:#00e67622;--green-glow:#00e67644;
+  --red:#ff5252;--red-dim:#ff525222;--red-glow:#ff525244;
+  --blue:#448aff;--blue-dim:#448aff22;
+  --amber:#ffab40;--amber-dim:#ffab4022;
+  --purple:#b388ff;--purple-dim:#b388ff22;
+  --cyan:#18ffff;--cyan-dim:#18ffff22;
+  --radius:14px;--radius-sm:10px;--radius-xs:6px;
+  --shadow:0 4px 24px rgba(0,0,0,0.3),0 1px 2px rgba(0,0,0,0.2);
+  --glow-green:0 0 20px rgba(0,230,118,0.15);
+  --glow-red:0 0 20px rgba(255,82,82,0.15);
+}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+.container{max-width:1320px;margin:0 auto;padding:20px}
+
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:20px 0 24px;margin-bottom:8px;flex-wrap:wrap;gap:12px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:42px;height:42px;background:linear-gradient(135deg,#448aff,#00e676);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 0 20px rgba(68,138,255,0.3)}
+.logo h1{font-size:1.35rem;font-weight:800;letter-spacing:-0.03em}
+.logo h1 span{background:linear-gradient(135deg,#448aff,#00e676);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-sub{font-size:0.72rem;color:var(--text-muted);margin-top:1px}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{padding:4px 12px;border-radius:999px;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;border:1px solid}
+.pill-green{background:var(--green-dim);color:var(--green);border-color:var(--green-glow)}
+.pill-blue{background:var(--blue-dim);color:var(--blue);border-color:#448aff44}
+.pill-amber{background:var(--amber-dim);color:var(--amber);border-color:#ffab4044}
+.pill-purple{background:var(--purple-dim);color:var(--purple);border-color:#b388ff44}
+.pill-red{background:var(--red-dim);color:var(--red);border-color:var(--red-glow)}
+
+/* Grid */
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.mt{margin-top:14px}
+@media(max-width:1024px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.g4,.g3,.g2{grid-template-columns:1fr}}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;transition:border-color 0.2s}
+.card:hover{border-color:var(--border-light)}
+.card-label{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);margin-bottom:10px;font-weight:600}
+.card-value{font-size:2.1rem;font-weight:800;letter-spacing:-0.03em;line-height:1.1}
+.card-sub{font-size:0.78rem;color:var(--text-secondary);margin-top:6px}
+.positive{color:var(--green)}.negative{color:var(--red)}
+
+/* Progress */
+.progress{width:100%;height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:10px}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--green));transition:width 0.6s ease}
+
+/* Section headers */
+.section-head{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-secondary);margin:28px 0 12px;display:flex;align-items:center;gap:8px}
+.section-head::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Chart */
+.chart-box{position:relative;height:200px}
+
+/* Bet Cards */
+.bet{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px;transition:all 0.2s}
+.bet:hover{border-color:var(--border-light);background:var(--card)}
+.bet-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px}
+.bet-pick{font-size:1rem;font-weight:700;letter-spacing:-0.01em}
+.bet-meta{font-size:0.7rem;color:var(--text-muted);margin-top:2px}
+.edge{padding:3px 10px;border-radius:999px;font-size:0.72rem;font-weight:700;white-space:nowrap}
+.edge-normal{background:var(--green-dim);color:var(--green);border:1px solid var(--green-glow)}
+.edge-hot{background:linear-gradient(135deg,#ff6d00,#ff3d00);color:#fff;animation:glow 2s ease-in-out infinite;box-shadow:0 0 12px rgba(255,61,0,0.4)}
+@keyframes glow{0%,100%{box-shadow:0 0 12px rgba(255,61,0,0.4)}50%{box-shadow:0 0 20px rgba(255,61,0,0.6)}}
+.bet-thesis{font-size:0.78rem;color:var(--text-secondary);margin-bottom:12px;line-height:1.5}
+.bet-stats{display:flex;gap:20px;font-size:0.75rem;color:var(--text-muted)}
+
+/* W/L Toggle */
+.toggle-row{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.toggle-label{font-size:0.7rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em}
+.toggle-group{display:flex;gap:0;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.toggle-btn{padding:5px 14px;font-size:0.7rem;font-weight:700;cursor:pointer;border:none;background:var(--surface);color:var(--text-muted);transition:all 0.15s;text-transform:uppercase;letter-spacing:0.04em}
+.toggle-btn:hover{background:var(--card)}
+.toggle-btn.active-w{background:var(--green);color:#000;box-shadow:var(--glow-green)}
+.toggle-btn.active-l{background:var(--red);color:#fff;box-shadow:var(--glow-red)}
+.toggle-btn.active-p{background:var(--blue);color:#fff}
+
+/* What-If Panel */
+.whatif{background:linear-gradient(135deg,#0c1220 0%,#111a2e 100%);border:1px solid var(--border-light);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
+.whatif::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--green),var(--purple))}
+.whatif-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-secondary);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.whatif-result{text-align:center;padding:16px 0}
+.whatif-pl{font-size:2.4rem;font-weight:800;letter-spacing:-0.03em;transition:color 0.2s}
+.whatif-balance{font-size:1rem;color:var(--text-secondary);margin-top:4px}
+.whatif-phase{display:inline-block;margin-top:8px;padding:4px 14px;border-radius:999px;font-size:0.72rem;font-weight:700}
+.whatif-breakdown{margin-top:16px;border-top:1px solid var(--border);padding-top:12px}
+.whatif-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:0.78rem}
+.whatif-row-label{color:var(--text-secondary)}
+
+/* Scenario cards */
+.sc-grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 10px;text-align:center;transition:all 0.2s;cursor:default}
+.sc:hover{border-color:var(--border-light)}
+.sc.best{border-color:var(--green);background:#00e67608}
+.sc.worst{border-color:var(--red);background:#ff525208}
+.sc-hits{font-size:0.82rem;font-weight:700;margin-bottom:4px}
+.sc-pl{font-size:1.15rem;font-weight:800}
+.sc-bal{font-size:0.72rem;color:var(--text-muted);margin-top:2px}
+.sc-phase{font-size:0.62rem;color:var(--text-muted);margin-top:4px}
+.sc-prob{font-size:0.58rem;color:var(--text-muted)}
+
+/* Injury rows */
+.inj{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #1a254022;font-size:0.78rem;flex-wrap:wrap}
+.inj:last-child{border-bottom:none}
+.inj-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.inj-status{padding:2px 8px;border-radius:999px;font-size:0.6rem;font-weight:700}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;font-size:0.78rem}
+th{text-align:left;padding:8px 10px;color:var(--text-muted);font-weight:600;border-bottom:1px solid var(--border);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em}
+td{padding:8px 10px;border-bottom:1px solid #1a254033}
+tr:hover{background:#ffffff04}
+.result-pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:0.62rem;font-weight:700}
+
+/* Feature rows */
+.feat{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #1a254033;font-size:0.78rem}
+.feat:last-child{border-bottom:none}
+.feat-badge{font-size:0.62rem;padding:2px 8px;border-radius:4px;font-weight:700}
+
+/* Prop bars */
+.pbar{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:0.78rem}
+.pbar-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:3px;transition:width 0.4s}
+
+/* Kill tags */
+.kill{display:inline-block;padding:4px 10px;margin:3px;border-radius:6px;background:var(--red-dim);color:var(--red);font-size:0.72rem;border:1px solid var(--red-glow)}
+
+/* Rules */
+.rule{padding:7px 0;border-bottom:1px solid #1a254033;font-size:0.78rem;color:var(--text-secondary)}
+.rule:last-child{border-bottom:none}
+
+/* Exposure bar */
+.exposure-bar{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.exposure-track{width:100%;height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin:6px 0}
+.exposure-fill{height:100%;border-radius:4px;transition:width 0.4s}
+.exposure-labels{display:flex;justify-content:space-between;font-size:0.68rem;color:var(--text-muted)}
+
+/* Footer */
+.footer{text-align:center;padding:28px 0;color:var(--text-muted);font-size:0.7rem;margin-top:32px;border-top:1px solid var(--border)}
+
+/* Correlation notes */
+.corr{font-size:0.72rem;color:var(--text-muted);padding:3px 0}
+
+/* Loading */
+.loading{display:flex;align-items:center;justify-content:center;min-height:60vh;font-size:1.1rem;color:var(--text-muted)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border-light)}
 </style>
 </head>
 <body>
 <div class="container" id="app">
-<div class="loading">Loading dashboard data...</div>
+<div class="loading">Loading...</div>
 </div>
 <script>
 const $ = s => document.querySelector(s);
-const h = (tag, cls, inner) => {
-  const el = document.createElement(tag);
-  if (cls) el.className = cls;
-  if (typeof inner === 'string') el.innerHTML = inner;
-  else if (inner instanceof HTMLElement) el.appendChild(inner);
-  return el;
-};
 
-async function loadDashboard() {
+async function init() {
   let d;
   try {
     const r = await fetch('./data/dashboard.json?t=' + Date.now());
     d = await r.json();
   } catch (e) {
-    $('#app').innerHTML = '<div class="loading">Failed to load dashboard.json</div>';
+    $('#app').innerHTML = '<div class="loading">Failed to load data</div>';
     return;
   }
   render(d);
@@ -128,438 +210,482 @@ function render(d) {
   const wins = a.record?.wins || 0;
   const losses = a.record?.losses || 0;
   const phase = a.phase || 1;
-  const phaseNames = {1:'SURVIVAL',2:'GROWTH',3:'COMPOUND'};
-  const phaseColors = {1:'amber',2:'blue',3:'green'};
-  const pctToGoal = Math.min(100, (bal / goal * 100)).toFixed(1);
-  const winRate = (wins + losses) > 0 ? (wins / (wins + losses) * 100).toFixed(1) : '0.0';
+  const phaseMap = {1:['SURVIVAL','amber'],2:['GROWTH','blue'],3:['COMPOUND','green']};
+  const [phaseName, phaseColor] = phaseMap[phase] || ['SURVIVAL','amber'];
+  const pctToGoal = Math.min(100, bal / goal * 100);
+  const winRate = (wins + losses) > 0 ? (wins / (wins + losses) * 100) : 0;
+  const latestBT = bt.versions?.slice(-1)[0] || {};
 
-  // Header
-  const header = h('div','header',`
-    <div>
-      <h1>📊 <span>Edge Engine</span> Dashboard</h1>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:2px">
-        ${m.engineVersion || 'v2.3'} · ${m.engineStatus || 'DEPLOYED'} · Updated ${new Date(m.lastUpdated).toLocaleString()}
+  // ===== HEADER =====
+  app.innerHTML += `
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">📊</div>
+      <div>
+        <h1><span>Edge Engine</span></h1>
+        <div class="logo-sub">${m.engineVersion || 'v2.3'} · ${m.engineStatus || 'DEPLOYED'} · ${new Date(m.lastUpdated).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} ${new Date(m.lastUpdated).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}</div>
       </div>
     </div>
-    <div class="badges">
-      <span class="badge badge-${phaseColors[phase]}">Phase ${phase}: ${phaseNames[phase]}</span>
-      <span class="badge badge-green">Engine Active</span>
-      ${m.scheduledTaskActive ? '<span class="badge badge-purple">Auto-Reports ON</span>' : ''}
+    <div class="pills">
+      <span class="pill pill-${phaseColor}">Phase ${phase}: ${phaseName}</span>
+      <span class="pill pill-green">Live</span>
+      ${m.scheduledTaskActive ? '<span class="pill pill-purple">Auto</span>' : ''}
     </div>
-  `);
-  app.appendChild(header);
+  </div>`;
 
-  // Row 1: Hero stats
-  const heroGrid = h('div','grid grid-4');
-  heroGrid.innerHTML = `
+  // ===== HERO STATS =====
+  app.innerHTML += `
+  <div class="grid g4">
     <div class="card">
-      <h2>💰 Balance</h2>
-      <div class="big ${bal >= (a.starting||0) ? 'positive' : 'negative'}">$${bal.toLocaleString('en-US',{minimumFractionDigits:2})}</div>
-      <div class="sub">${a.netPL >= 0 ? '+' : ''}$${(a.netPL||0).toFixed(2)} (${(a.roi||0).toFixed(1)}% ROI)</div>
-    </div>
-    <div class="card">
-      <h2>🎯 Goal Progress</h2>
-      <div class="big">${pctToGoal}%</div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${pctToGoal}%;background:linear-gradient(90deg,var(--blue),var(--green))"></div></div>
-      <div class="sub">$${bal.toFixed(0)} / $${goal.toLocaleString()}</div>
+      <div class="card-label">Balance</div>
+      <div class="card-value ${bal >= (a.starting||0) ? 'positive' : 'negative'}">$${bal.toLocaleString('en-US',{minimumFractionDigits:2})}</div>
+      <div class="card-sub">${a.netPL >= 0 ? '+' : ''}$${(a.netPL||0).toFixed(2)} · ${(a.roi||0).toFixed(1)}% ROI</div>
     </div>
     <div class="card">
-      <h2>📊 Record</h2>
-      <div class="big">${wins}W-${losses}L</div>
-      <div class="sub">${winRate}% win rate</div>
+      <div class="card-label">Goal Progress</div>
+      <div class="card-value">${pctToGoal.toFixed(1)}%</div>
+      <div class="progress"><div class="progress-fill" style="width:${pctToGoal}%"></div></div>
+      <div class="card-sub">$${bal.toFixed(0)} / $${goal.toLocaleString()}</div>
     </div>
     <div class="card">
-      <h2>🧠 Model Accuracy</h2>
-      <div class="big">${(bt.versions?.slice(-1)[0]?.winner||0).toFixed(1)}%</div>
-      <div class="sub">HIGH conf: ${(bt.versions?.slice(-1)[0]?.high||0).toFixed(1)}%</div>
+      <div class="card-label">Record</div>
+      <div class="card-value">${wins}W – ${losses}L</div>
+      <div class="card-sub">${winRate.toFixed(1)}% win rate</div>
     </div>
-  `;
-  app.appendChild(heroGrid);
+    <div class="card">
+      <div class="card-label">Model Accuracy</div>
+      <div class="card-value">${(latestBT.winner||0).toFixed(1)}%</div>
+      <div class="card-sub">HIGH conf: ${(latestBT.high||0).toFixed(1)}%</div>
+    </div>
+  </div>`;
 
-  // Row 2: Equity Curve + Today's Picks
-  const r2 = h('div','grid grid-2','');
-  r2.style.marginTop = '16px';
+  // ===== EQUITY CURVE + RECENT RESULTS =====
+  app.innerHTML += `
+  <div class="grid g2 mt">
+    <div class="card">
+      <div class="card-label">Equity Curve</div>
+      <div class="chart-box"><canvas id="ecChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Recent Results</div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>Date</th><th>Type</th><th>Risk</th><th>P/L</th><th></th></tr></thead>
+          <tbody>${bets.slice(-8).reverse().map(b => {
+            const rc = b.result === 'W' ? 'positive' : b.result === 'L' ? 'negative' : '';
+            const pillBg = b.result === 'W' ? 'var(--green-dim)' : b.result === 'L' ? 'var(--red-dim)' : 'var(--amber-dim)';
+            const pillColor = b.result === 'W' ? 'var(--green)' : b.result === 'L' ? 'var(--red)' : 'var(--amber)';
+            return `<tr>
+              <td>${(b.date||'').split('-').slice(1).join('/')}</td>
+              <td style="font-size:0.7rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.type}</td>
+              <td>$${(b.risk||0).toFixed(0)}</td>
+              <td class="${rc}">${b.pl != null ? (b.pl >= 0 ? '+' : '') + '$' + b.pl.toFixed(0) : '—'}</td>
+              <td><span class="result-pill" style="background:${pillBg};color:${pillColor}">${b.result||'⏳'}</span></td>
+            </tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  </div>`;
 
-  // Equity Curve
-  const ecCard = h('div','card','');
-  ecCard.innerHTML = `<h2>📈 Equity Curve</h2><div class="chart-wrap"><canvas id="ecChart"></canvas></div>`;
-  r2.appendChild(ecCard);
-
-  // Today's Picks — FIXED to match actual JSON schema
-  const tpCard = h('div','card','');
-  let tpHTML = `<h2>🏀 Today's Picks — ${tp.date || 'N/A'}</h2>`;
+  // ===== TODAY'S PICKS + WHAT-IF =====
+  const tpBets = tp.bets || [];
+  app.innerHTML += `<div class="section-head">Today's Card — ${tp.date || 'N/A'}</div>`;
   if (tp.games) {
-    tpHTML += `<div style="font-size:0.72rem;color:var(--muted);margin-bottom:14px;line-height:1.6">${tp.games}</div>`;
+    app.innerHTML += `<div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:12px">${tp.games}</div>`;
   }
-  if (tp.bets && tp.bets.length > 0) {
-    tp.bets.forEach(b => {
-      const edgeNum = parseFloat(String(b.edge).replace(/[+%]/g, ''));
-      const isHot = edgeNum >= 15;
-      tpHTML += `<div class="bet-card">
-        <div class="bet-card-header">
-          <div>
-            <div class="bet-card-pick">${b.pick || 'N/A'}</div>
-            <div class="bet-card-type">${b.type || ''} · ${b.price || ''}</div>
-          </div>
-          <span class="edge-badge${isHot ? ' hot' : ''}">${isHot ? '🔥 ' : ''}${b.edge || ''}</span>
-        </div>
-        ${b.thesis ? `<div class="bet-card-thesis">${b.thesis}</div>` : ''}
-        <div class="bet-card-stats">
-          <span>💵 Risk: $${(b.risk||0).toFixed(2)}</span>
-          <span>🎯 Payout: $${(b.payout||0).toFixed(0)}</span>
-          <span>📐 ${((b.payout||0)/(b.risk||1)).toFixed(2)}x</span>
-        </div>
-      </div>`;
-    });
-    if (tp.sessionExposure > 0) {
-      const expColor = tp.exposurePct > 50 ? 'var(--amber)' : 'var(--muted)';
-      tpHTML += `<div style="font-size:0.75rem;color:${expColor};margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
-        Session exposure: $${tp.sessionExposure.toFixed(0)} (${tp.exposurePct.toFixed(1)}%) · Max profit: $${(tp.maxProfit||0).toFixed(0)}
-      </div>`;
-      if (tp.sizingNote) {
-        tpHTML += `<div style="font-size:0.7rem;color:var(--amber);margin-top:4px">⚠️ ${tp.sizingNote}</div>`;
-      }
-    }
-  } else {
-    tpHTML += '<div style="color:var(--muted);font-size:0.85rem;padding:20px 0">No picks today</div>';
-  }
-  tpCard.innerHTML = tpHTML;
-  r2.appendChild(tpCard);
-  app.appendChild(r2);
 
-  // Row 3: Scenarios + Injuries
-  const r3 = h('div','grid grid-2','');
-  r3.style.marginTop = '16px';
+  const picksAndWhatIf = document.createElement('div');
+  picksAndWhatIf.className = 'grid g2';
 
-  // Scenarios — FIXED to match actual JSON schema {hits, pl, balance, phase, prob}
-  const scCard = h('div','card','');
-  let scHTML = '<h2>🎲 Tonight\'s Scenarios</h2><div class="scenario-grid">';
-  scenarios.forEach((s, i) => {
-    const cls = i === 0 ? 'best' : i === scenarios.length - 1 ? 'worst' : '';
-    const plColor = s.pl >= 0 ? 'positive' : 'negative';
-    scHTML += `<div class="scenario-card ${cls}">
-      <div style="font-size:0.85rem;font-weight:700;margin-bottom:4px">${s.hits || ''}</div>
-      <div style="font-size:1.2rem;font-weight:700" class="${plColor}">
-        ${s.pl >= 0 ? '+' : ''}$${(s.pl||0).toFixed(2)}
+  // Left: Bet cards
+  const picksCol = document.createElement('div');
+  tpBets.forEach((b, i) => {
+    const edgeNum = parseFloat(String(b.edge).replace(/[+%]/g, ''));
+    const isHot = edgeNum >= 15;
+    const multi = ((b.payout||0)/(b.risk||1)).toFixed(2);
+    const div = document.createElement('div');
+    div.className = 'bet';
+    div.innerHTML = `
+      <div class="bet-top">
+        <div>
+          <div class="bet-pick">${b.pick || 'N/A'}</div>
+          <div class="bet-meta">${b.type || ''} · ${b.price || ''}</div>
+        </div>
+        <span class="edge ${isHot ? 'edge-hot' : 'edge-normal'}">${isHot ? '🔥 ' : ''}${b.edge || ''}</span>
       </div>
-      <div style="font-size:0.75rem;color:var(--muted)">→ $${(s.balance||0).toFixed(2)}</div>
-      <div style="font-size:0.65rem;margin-top:4px;color:var(--muted)">${s.phase || ''}</div>
-      ${s.prob ? `<div style="font-size:0.6rem;color:var(--muted);margin-top:2px">${s.prob}</div>` : ''}
-    </div>`;
+      ${b.thesis ? `<div class="bet-thesis">${b.thesis}</div>` : ''}
+      <div class="bet-stats">
+        <span>Risk $${(b.risk||0).toFixed(0)}</span>
+        <span>Payout $${(b.payout||0).toFixed(0)}</span>
+        <span>${multi}x</span>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">What if</span>
+        <div class="toggle-group">
+          <button class="toggle-btn" data-bet="${i}" data-val="W" onclick="toggleBet(${i},'W')">Win</button>
+          <button class="toggle-btn active-p" data-bet="${i}" data-val="P" onclick="toggleBet(${i},'P')">TBD</button>
+          <button class="toggle-btn" data-bet="${i}" data-val="L" onclick="toggleBet(${i},'L')">Loss</button>
+        </div>
+      </div>`;
+    picksCol.appendChild(div);
   });
-  scHTML += '</div>';
-  if (correlations.length > 0) {
-    scHTML += '<div style="margin-top:12px;padding-top:8px;border-top:1px solid var(--border)">';
-    correlations.forEach(c => {
-      scHTML += `<div class="corr-note">• ${c.note}</div>`;
-    });
-    scHTML += '</div>';
-  }
-  scCard.innerHTML = scHTML;
-  r3.appendChild(scCard);
 
-  // Injuries — FIXED: parse string format "🔴 Player (TEAM): STATUS — note"
-  const injCard = h('div','card','');
-  let injHTML = '<h2>🏥 Injury Watch</h2>';
-  if (tp.injuries && tp.injuries.length > 0) {
-    tp.injuries.forEach(inj => {
+  // Exposure bar
+  if (tp.sessionExposure > 0) {
+    const expPct = tp.exposurePct || 0;
+    const expColor = expPct > 50 ? (expPct > 80 ? 'var(--red)' : 'var(--amber)') : 'var(--green)';
+    const expDiv = document.createElement('div');
+    expDiv.className = 'exposure-bar';
+    expDiv.innerHTML = `
+      <div class="exposure-labels"><span>Session Exposure</span><span style="color:${expColor};font-weight:600">$${tp.sessionExposure.toFixed(0)} (${expPct.toFixed(1)}%)</span></div>
+      <div class="exposure-track"><div class="exposure-fill" style="width:${Math.min(100,expPct)}%;background:${expColor}"></div></div>
+      <div class="exposure-labels"><span>Max profit: $${(tp.maxProfit||0).toFixed(0)}</span><span>Phase ${phase} max: ${phase===1?'20%':phase===2?'25%':'30%'}</span></div>
+      ${tp.sizingNote ? `<div style="font-size:0.68rem;color:var(--amber);margin-top:6px">⚠️ ${tp.sizingNote}</div>` : ''}`;
+    picksCol.appendChild(expDiv);
+  }
+  picksAndWhatIf.appendChild(picksCol);
+
+  // Right: What-If panel + scenarios
+  const whatIfCol = document.createElement('div');
+  whatIfCol.innerHTML = `
+  <div class="whatif" id="whatif-panel">
+    <div class="whatif-title"><span style="font-size:1rem">🎮</span> What-If Simulator</div>
+    <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:16px">Toggle each bet to Win or Loss to see your projected outcome</div>
+    <div class="whatif-result" id="whatif-result">
+      <div class="whatif-pl" id="whatif-pl" style="color:var(--text-secondary)">—</div>
+      <div class="whatif-balance" id="whatif-balance">Toggle bets to simulate</div>
+      <div id="whatif-phase-wrap"></div>
+    </div>
+    <div class="whatif-breakdown" id="whatif-breakdown"></div>
+  </div>
+  <div class="card" style="margin-top:14px;padding:16px">
+    <div class="card-label">Scenario Probabilities</div>
+    <div class="sc-grid" style="margin-top:8px">
+      ${scenarios.map((s, i) => {
+        const cls = i === 0 ? 'best' : i === scenarios.length - 1 ? 'worst' : '';
+        return `<div class="sc ${cls}">
+          <div class="sc-hits">${s.hits}</div>
+          <div class="sc-pl ${s.pl >= 0 ? 'positive' : 'negative'}">${s.pl >= 0 ? '+' : ''}$${(s.pl||0).toFixed(0)}</div>
+          <div class="sc-bal">→ $${(s.balance||0).toFixed(0)}</div>
+          <div class="sc-phase">${s.phase}</div>
+          ${s.prob ? `<div class="sc-prob">${s.prob}</div>` : ''}
+        </div>`;
+      }).join('')}
+    </div>
+    ${correlations.length > 0 ? `<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">${correlations.map(c => `<div class="corr">• ${c.note}</div>`).join('')}</div>` : ''}
+  </div>`;
+  picksAndWhatIf.appendChild(whatIfCol);
+  app.appendChild(picksAndWhatIf);
+
+  // ===== INJURIES =====
+  const injuries = tp.injuries || [];
+  if (injuries.length > 0) {
+    const injSec = document.createElement('div');
+    injSec.className = 'card mt';
+    let injHTML = '<div class="card-label">Injury Watch</div><div class="grid g2" style="gap:2px 24px">';
+    injuries.forEach(inj => {
       if (typeof inj === 'string') {
-        // Parse string format: "🔴 Player (TEAM): STATUS — note" or "✅ Player (TEAM): STATUS"
-        const iconMatch = inj.match(/^(🔴|✅|🟡)/);
-        const icon = iconMatch ? iconMatch[1] : '⚪';
+        const icon = inj.match(/^(🔴|✅|🟡)/)?.[1] || '⚪';
         const dotColor = icon === '🔴' ? 'var(--red)' : icon === '✅' ? 'var(--green)' : 'var(--amber)';
         const cleaned = inj.replace(/^(🔴|✅|🟡)\s*/, '');
-        const parts = cleaned.split(':');
-        const playerPart = (parts[0] || '').trim();
-        const statusPart = (parts[1] || '').trim();
+        const [playerPart, ...rest] = cleaned.split(':');
+        const statusPart = rest.join(':').trim();
         const nameMatch = playerPart.match(/^(.+?)\s*\(([^)]+)\)/);
-        const player = nameMatch ? nameMatch[1].trim() : playerPart;
+        const player = nameMatch ? nameMatch[1].trim() : playerPart.trim();
         const team = nameMatch ? nameMatch[2] : '';
-        const statusSplit = statusPart.split('—');
-        const status = (statusSplit[0] || '').trim();
-        const note = (statusSplit[1] || '').trim();
-        const statusColor = status.includes('OUT') ? 'red' : status.includes('PLAYING') || status.includes('RETURNING') ? 'green' : 'amber';
-        injHTML += `<div class="injury-row">
-          <div class="injury-dot" style="background:${dotColor}"></div>
+        const [status, ...notes] = statusPart.split('—');
+        const note = notes.join('—').trim();
+        const statusClean = (status || '').trim();
+        const sc = statusClean.includes('OUT') ? 'red' : statusClean.includes('PLAYING') || statusClean.includes('RETURNING') ? 'green' : 'amber';
+        injHTML += `<div class="inj">
+          <div class="inj-dot" style="background:${dotColor}"></div>
           <strong>${player}</strong>
-          ${team ? `<span style="color:var(--muted);font-size:0.75rem">(${team})</span>` : ''}
-          <span class="badge badge-${statusColor}" style="font-size:0.6rem;padding:2px 6px">${status}</span>
-          ${note ? `<span style="color:var(--muted);font-size:0.7rem">— ${note}</span>` : ''}
-        </div>`;
-      } else {
-        // Object format fallback
-        const dotColor = inj.status === 'OUT' ? 'var(--red)' : inj.status === 'GTD' || inj.status === 'QUESTIONABLE' ? 'var(--amber)' : 'var(--green)';
-        injHTML += `<div class="injury-row">
-          <div class="injury-dot" style="background:${dotColor}"></div>
-          <strong>${inj.player}</strong>
-          <span style="color:var(--muted)">(${inj.team})</span>
-          <span class="badge badge-${inj.status==='OUT'?'red':'amber'}" style="font-size:0.6rem">${inj.status}</span>
-          ${inj.note ? `<span style="color:var(--muted);font-size:0.7rem">${inj.note}</span>` : ''}
+          <span style="color:var(--text-muted);font-size:0.72rem">${team}</span>
+          <span class="inj-status" style="background:var(--${sc}-dim);color:var(--${sc})">${statusClean}</span>
+          ${note ? `<span style="color:var(--text-muted);font-size:0.7rem">${note}</span>` : ''}
         </div>`;
       }
     });
-  } else {
-    injHTML += '<div style="color:var(--muted);font-size:0.85rem;padding:16px 0">No injury data available</div>';
+    injHTML += '</div>';
+    injSec.innerHTML = injHTML;
+    app.appendChild(injSec);
   }
-  injCard.innerHTML = injHTML;
-  r3.appendChild(injCard);
-  app.appendChild(r3);
 
-  // Row 4: Backtest Charts
-  app.appendChild(h('div','section-title','📉 Model Performance'));
-  const r4 = h('div','grid grid-3','');
-  r4.innerHTML = `
-    <div class="card"><h2>Model Evolution</h2><div class="chart-wrap"><canvas id="btChart"></canvas></div></div>
-    <div class="card"><h2>Probability Calibration</h2><div class="chart-wrap"><canvas id="calChart"></canvas></div></div>
-    <div class="card"><h2>Monthly Trend</h2><div class="chart-wrap"><canvas id="trendChart"></canvas></div></div>
-  `;
-  app.appendChild(r4);
+  // ===== MODEL PERFORMANCE =====
+  app.innerHTML += `<div class="section-head">Model Performance</div>`;
+  app.innerHTML += `
+  <div class="grid g3">
+    <div class="card"><div class="card-label">Model Evolution</div><div class="chart-box"><canvas id="btChart"></canvas></div></div>
+    <div class="card"><div class="card-label">Calibration</div><div class="chart-box"><canvas id="calChart"></canvas></div></div>
+    <div class="card"><div class="card-label">Monthly Trend</div><div class="chart-box"><canvas id="trendChart"></canvas></div></div>
+  </div>`;
 
-  // Row 5: Ablation + Engine Features
-  const r5 = h('div','grid grid-2','');
-  r5.style.marginTop = '16px';
+  // ===== ABLATION + ENGINE =====
+  app.innerHTML += `
+  <div class="grid g2 mt">
+    <div class="card"><div class="card-label">Feature Ablation</div><div class="chart-box" style="height:240px"><canvas id="ablChart"></canvas></div></div>
+    <div class="card"><div class="card-label">Engine Stack</div>
+      ${(eng.features||[]).map(f => {
+        const sc = f.status === 'active' ? 'green' : f.status === 'DISABLED' ? 'red' : 'amber';
+        return `<div class="feat">
+          <span>${f.name} <span style="color:var(--text-muted);font-size:0.68rem">${f.weight||''}</span></span>
+          <span><span class="feat-badge" style="background:var(--${sc}-dim);color:var(--${sc})">${f.status}</span> <span style="font-size:0.68rem;color:var(--text-muted);margin-left:4px">${f.impact||''}</span></span>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
 
-  const ablCard = h('div','card','');
-  ablCard.innerHTML = `<h2>🔬 Feature Ablation Study</h2><div class="chart-wrap" style="height:260px"><canvas id="ablChart"></canvas></div>`;
-  r5.appendChild(ablCard);
-
-  const engCard = h('div','card','');
-  let engHTML = '<h2>⚙️ Engine Feature Stack</h2>';
-  (eng.features || []).forEach(f => {
-    const sc = f.status === 'active' ? 'green' : f.status === 'DISABLED' ? 'red' : 'amber';
-    engHTML += `<div class="feature-row">
-      <span>${f.name} <span style="color:var(--muted);font-size:0.7rem">${f.weight||''}</span></span>
-      <span><span class="feature-status" style="background:var(--${sc})22;color:var(--${sc})">${f.status}</span> <span style="font-size:0.7rem;color:var(--muted)">${f.impact||''}</span></span>
-    </div>`;
-  });
-  engCard.innerHTML = engHTML;
-  r5.appendChild(engCard);
-  app.appendChild(r5);
-
-  // Row 6: Prop Performance
+  // ===== PROPS =====
   const propData = props.strong65 || [];
   if (propData.length > 0) {
-    app.appendChild(h('div','section-title','🎯 Player Prop Backtest (65%+ Confidence)'));
-    const r6 = h('div','grid grid-4','');
-    const categories = [
-      {name:'Points',icon:'🏀',filter:p=>p.prop.includes('PTS')},
-      {name:'Rebounds',icon:'📏',filter:p=>p.prop.includes('REB')},
-      {name:'Assists',icon:'🤝',filter:p=>p.prop.includes('AST')},
-      {name:'Threes',icon:'🎯',filter:p=>p.prop.includes('3PT')},
+    app.innerHTML += `<div class="section-head">Prop Backtest (65%+ Confidence)</div>`;
+    const cats = [
+      {name:'Points',icon:'🏀',f:p=>p.prop.includes('PTS')},
+      {name:'Rebounds',icon:'📏',f:p=>p.prop.includes('REB')},
+      {name:'Assists',icon:'🤝',f:p=>p.prop.includes('AST')},
+      {name:'Threes',icon:'🎯',f:p=>p.prop.includes('3PT')},
     ];
-    categories.forEach(cat => {
-      const items = propData.filter(cat.filter);
-      let cardHTML = `<div class="card"><h2>${cat.icon} ${cat.name}</h2>`;
-      items.forEach(p => {
-        const color = p.pct >= 80 ? 'var(--green)' : p.pct >= 70 ? 'var(--blue)' : p.pct >= 60 ? 'var(--amber)' : 'var(--red)';
-        cardHTML += `<div class="prop-bar">
-          <span style="width:60px;flex-shrink:0;font-size:0.75rem">${p.prop}</span>
-          <div class="prop-bar-track"><div class="prop-bar-fill" style="width:${p.pct}%;background:${color}"></div></div>
-          <span style="width:45px;text-align:right;font-weight:600;font-size:0.75rem;color:${color}">${p.pct}%</span>
-        </div>`;
-      });
-      cardHTML += '</div>';
-      r6.innerHTML += cardHTML;
-    });
-    app.appendChild(r6);
+    app.innerHTML += `<div class="grid g4">${cats.map(cat => {
+      const items = propData.filter(cat.f);
+      return `<div class="card"><div class="card-label">${cat.icon} ${cat.name}</div>
+        ${items.map(p => {
+          const c = p.pct >= 80 ? 'var(--green)' : p.pct >= 70 ? 'var(--blue)' : p.pct >= 60 ? 'var(--amber)' : 'var(--red)';
+          return `<div class="pbar">
+            <span style="width:56px;flex-shrink:0;font-size:0.72rem">${p.prop}</span>
+            <div class="pbar-track"><div class="pbar-fill" style="width:${p.pct}%;background:${c}"></div></div>
+            <span style="width:40px;text-align:right;font-weight:700;font-size:0.72rem;color:${c}">${p.pct}%</span>
+          </div>`;
+        }).join('')}
+      </div>`;
+    }).join('')}</div>`;
   }
 
-  // Row 7: Bet History + Strategy
-  const r7 = h('div','grid grid-2','');
-  r7.style.marginTop = '16px';
+  // ===== STRATEGY =====
+  app.innerHTML += `<div class="section-head">Strategy — ${strat.name || ''}</div>`;
+  app.innerHTML += `
+  <div class="grid g2">
+    <div class="card">
+      <div class="card-label">Bet Types</div>
+      ${['betA','betB','betC','betD','betE','betF'].map(k => {
+        const b = strat[k];
+        if (!b) return '';
+        return `<div style="padding:8px 0;border-bottom:1px solid #1a254033">
+          <strong style="font-size:0.82rem">${b.name}</strong>
+          <div style="font-size:0.72rem;color:var(--text-secondary);margin-top:2px">${b.desc}${b.target ? ' · Target: '+b.target : ''}${b.cushion ? ' · Cushion: '+b.cushion : ''}${b.maxRisk ? ' · Max: '+b.maxRisk : ''}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="card">
+      ${strat.killList ? `<div class="card-label">Kill List</div><div style="margin-bottom:16px">${strat.killList.map(k => `<span class="kill">❌ ${k}</span>`).join('')}</div>` : ''}
+      ${strat.hardRules ? `<div class="card-label">Hard Rules</div>${strat.hardRules.map(r => `<div class="rule">• ${r}</div>`).join('')}` : ''}
+    </div>
+  </div>`;
 
-  const bhCard = h('div','card','');
-  let bhHTML = '<h2>📋 Recent Bet History</h2><div style="overflow-x:auto"><table><thead><tr><th>#</th><th>Date</th><th>Type</th><th>Picks</th><th>Risk</th><th>P/L</th><th>Result</th></tr></thead><tbody>';
-  bets.slice(-10).reverse().forEach(b => {
-    const rc = b.result === 'W' ? 'positive' : b.result === 'L' ? 'negative' : '';
-    const plDisplay = b.pl != null ? (b.pl >= 0 ? '+' : '') + '$' + b.pl.toFixed(2) : '—';
-    bhHTML += `<tr>
-      <td>${b.id}</td>
-      <td>${b.date?.split('-').slice(1).join('/')}</td>
-      <td style="font-size:0.7rem">${b.type}</td>
-      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:0.7rem">${b.picks}</td>
-      <td>$${(b.risk||0).toFixed(0)}</td>
-      <td class="${rc}">${plDisplay}</td>
-      <td><span class="status-pill status-${b.result||'PENDING'}">${b.result||'⏳'}</span></td>
-    </tr>`;
+  // ===== FOOTER =====
+  app.innerHTML += `<div class="footer">Edge Engine ${m.engineVersion||'v2.3'} · ${(latestBT.winner||0).toFixed(1)}% model accuracy · Phase ${phase} ${phaseName} · $${bal.toFixed(2)} / $${goal.toLocaleString()}</div>`;
+
+  // ===== CHARTS =====
+  requestAnimationFrame(() => renderCharts(ec, bt, ablation));
+
+  // ===== WHAT-IF STATE =====
+  window._betStates = tpBets.map(() => 'P');
+  window._tpBets = tpBets;
+  window._currentBalance = bal;
+  window._phases = a.phases || [];
+  updateWhatIf();
+}
+
+// ===== TOGGLE LOGIC =====
+window.toggleBet = function(idx, val) {
+  const states = window._betStates;
+  if (states[idx] === val) val = 'P'; // toggle off
+  states[idx] = val;
+
+  // Update button styles
+  document.querySelectorAll(`[data-bet="${idx}"]`).forEach(btn => {
+    btn.className = 'toggle-btn';
+    if (btn.dataset.val === val) {
+      btn.classList.add(val === 'W' ? 'active-w' : val === 'L' ? 'active-l' : 'active-p');
+    }
   });
-  bhHTML += '</tbody></table></div>';
-  bhCard.innerHTML = bhHTML;
-  r7.appendChild(bhCard);
 
-  // Strategy
-  const strCard = h('div','card','');
-  let strHTML = `<h2>📐 ${strat.name || 'Strategy'}</h2>`;
-  ['betA','betB','betC','betD','betE','betF'].forEach(k => {
-    const b = strat[k];
-    if (b) strHTML += `<div style="padding:8px 0;border-bottom:1px solid #1e293b44">
-      <strong style="font-size:0.85rem">${b.name}</strong>
-      <div style="font-size:0.75rem;color:var(--muted)">${b.desc}${b.target ? ' · Target: '+b.target : ''}${b.cushion ? ' · Cushion: '+b.cushion : ''}${b.maxRisk ? ' · Max: '+b.maxRisk : ''}</div>
+  updateWhatIf();
+};
+
+function updateWhatIf() {
+  const states = window._betStates;
+  const bets = window._tpBets;
+  const bal = window._currentBalance;
+  const phases = window._phases;
+
+  const allPending = states.every(s => s === 'P');
+  const plEl = document.getElementById('whatif-pl');
+  const balEl = document.getElementById('whatif-balance');
+  const phaseWrap = document.getElementById('whatif-phase-wrap');
+  const breakdown = document.getElementById('whatif-breakdown');
+
+  if (!plEl) return;
+
+  if (allPending) {
+    plEl.style.color = 'var(--text-secondary)';
+    plEl.textContent = '—';
+    balEl.textContent = 'Toggle bets to simulate';
+    phaseWrap.innerHTML = '';
+    breakdown.innerHTML = '';
+    return;
+  }
+
+  let totalPL = 0;
+  let rows = '';
+  bets.forEach((b, i) => {
+    const s = states[i];
+    let pl = 0;
+    let label = '⏳ Pending';
+    let color = 'var(--text-muted)';
+    if (s === 'W') {
+      pl = (b.payout || 0) - (b.risk || 0);
+      label = `✅ +$${pl.toFixed(0)}`;
+      color = 'var(--green)';
+    } else if (s === 'L') {
+      pl = -(b.risk || 0);
+      label = `❌ -$${(b.risk||0).toFixed(0)}`;
+      color = 'var(--red)';
+    }
+    totalPL += pl;
+    rows += `<div class="whatif-row">
+      <span class="whatif-row-label">${b.pick || 'Bet '+(i+1)}</span>
+      <span style="font-weight:600;color:${color}">${label}</span>
     </div>`;
   });
-  if (strat.killList) {
-    strHTML += `<div style="margin-top:12px"><h2 style="margin-bottom:6px">☠️ Kill List</h2>${strat.killList.map(k => `<span class="kill-tag">❌ ${k}</span>`).join('')}</div>`;
-  }
-  if (strat.hardRules) {
-    strHTML += `<div style="margin-top:12px"><h2 style="margin-bottom:6px">⚖️ Hard Rules</h2>`;
-    strat.hardRules.forEach(r => { strHTML += `<div class="rule-item">• ${r}</div>`; });
-    strHTML += '</div>';
-  }
-  strCard.innerHTML = strHTML;
-  r7.appendChild(strCard);
-  app.appendChild(r7);
 
-  // Footer
-  const footer = h('div','footer',`
-    Edge Engine ${m.engineVersion||'v2.3'} · Backtest: ${bt.versions?.length||0} versions, ${(bt.versions?.slice(-1)[0]?.winner||0).toFixed(1)}% winner accuracy ·
-    Phase ${phase} ${phaseNames[phase]} · $${bal.toFixed(2)} / $${goal.toLocaleString()} goal
-  `);
-  app.appendChild(footer);
+  const newBal = bal + totalPL;
+  const newPhase = getPhase(newBal, phases);
 
-  // --- CHARTS (deferred to next frame for canvas readiness) ---
-  requestAnimationFrame(() => renderCharts(ec, bt, ablation));
+  plEl.style.color = totalPL >= 0 ? 'var(--green)' : 'var(--red)';
+  plEl.textContent = `${totalPL >= 0 ? '+' : ''}$${totalPL.toFixed(2)}`;
+  balEl.textContent = `New balance: $${newBal.toFixed(2)}`;
+
+  const phaseColor = newPhase.name === 'SURVIVAL' ? 'amber' : newPhase.name === 'GROWTH' ? 'blue' : 'green';
+  phaseWrap.innerHTML = `<span class="whatif-phase pill pill-${phaseColor}" style="margin-top:10px">${newPhase.name}</span>`;
+
+  let warning = '';
+  if (newBal < 50) warning = '<div style="color:var(--red);font-size:0.75rem;margin-top:8px;font-weight:600">⛔ Near wipeout territory</div>';
+  else if (newBal < bal * 0.6) warning = '<div style="color:var(--amber);font-size:0.75rem;margin-top:8px">⚠️ Significant drawdown</div>';
+  else if (newBal >= 500) warning = '<div style="color:var(--green);font-size:0.75rem;margin-top:8px">🎯 Phase 3 unlocked!</div>';
+
+  breakdown.innerHTML = rows + warning;
+}
+
+function getPhase(balance, phases) {
+  if (!phases || phases.length === 0) {
+    if (balance >= 500) return {name:'COMPOUND'};
+    if (balance >= 250) return {name:'GROWTH'};
+    return {name:'SURVIVAL'};
+  }
+  for (let i = phases.length - 1; i >= 0; i--) {
+    if (balance >= phases[i].min) return phases[i];
+  }
+  return phases[0];
 }
 
 function renderCharts(ec, bt, ablation) {
-  const chartDefaults = {
+  const base = {
     responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } },
+    plugins: { legend: { labels: { color: '#5a6a84', font: { size: 10, family: 'Inter' } } } },
     scales: {
-      x: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: '#1e293b' } },
-      y: { ticks: { color: '#64748b', font: { size: 10 } }, grid: { color: '#1e293b' } }
+      x: { ticks: { color: '#3a4a64', font: { size: 9 } }, grid: { color: '#1a254033' }, border: { color: '#1a2540' } },
+      y: { ticks: { color: '#3a4a64', font: { size: 9 } }, grid: { color: '#1a254033' }, border: { color: '#1a2540' } }
     }
   };
 
-  // Equity Curve
   if (ec.length > 0) {
-    const ecCtx = document.getElementById('ecChart');
-    if (ecCtx) {
-      new Chart(ecCtx, {
-        type: 'line',
-        data: {
-          labels: ec.map(p => {
-            const parts = (p.date || '').split('-');
-            return parts.length >= 3 ? parts[1] + '/' + parts[2] : p.date;
-          }),
-          datasets: [{
-            label: 'Balance',
-            data: ec.map(p => p.balance),
-            borderColor: '#22c55e',
-            backgroundColor: 'rgba(34,197,94,0.1)',
-            fill: true,
-            tension: 0.3,
-            pointRadius: 4,
-            pointBackgroundColor: '#22c55e',
-            pointBorderColor: '#22c55e',
-            borderWidth: 2,
-          }]
-        },
-        options: {
-          ...chartDefaults,
-          plugins: { ...chartDefaults.plugins, legend: { display: false } },
-          scales: {
-            ...chartDefaults.scales,
-            y: { ...chartDefaults.scales.y, ticks: { ...chartDefaults.scales.y.ticks, callback: v => '$' + v } }
-          }
-        }
-      });
-    }
+    const ctx = document.getElementById('ecChart');
+    if (ctx) new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ec.map(p => (p.date||'').split('-').slice(1).join('/')),
+        datasets: [{
+          data: ec.map(p => p.balance),
+          borderColor: '#00e676', backgroundColor: 'rgba(0,230,118,0.08)',
+          fill: true, tension: 0.35, pointRadius: 4, pointBackgroundColor: '#00e676',
+          pointBorderColor: '#00e676', borderWidth: 2,
+        }]
+      },
+      options: { ...base, plugins: { legend: { display: false } },
+        scales: { ...base.scales, y: { ...base.scales.y, ticks: { ...base.scales.y.ticks, callback: v => '$'+v } } } }
+    });
   }
 
-  // Backtest versions
   const versions = bt.versions || [];
   if (versions.length > 0) {
-    const btCtx = document.getElementById('btChart');
-    if (btCtx) {
-      new Chart(btCtx, {
-        type: 'bar',
-        data: {
-          labels: versions.map(v => v.version),
-          datasets: [
-            { label: 'Overall', data: versions.map(v => v.winner), backgroundColor: '#3b82f6' },
-            { label: 'HIGH', data: versions.map(v => v.high), backgroundColor: '#22c55e' },
-            { label: 'MED', data: versions.map(v => v.med), backgroundColor: '#f59e0b' },
-          ]
-        },
-        options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, min: 40, max: 90 } } }
-      });
-    }
+    const ctx = document.getElementById('btChart');
+    if (ctx) new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: versions.map(v => v.version),
+        datasets: [
+          { label: 'Overall', data: versions.map(v => v.winner), backgroundColor: '#448aff' },
+          { label: 'HIGH', data: versions.map(v => v.high), backgroundColor: '#00e676' },
+          { label: 'MED', data: versions.map(v => v.med), backgroundColor: '#ffab40' },
+        ]
+      },
+      options: { ...base, scales: { ...base.scales, y: { ...base.scales.y, min: 40, max: 90 } } }
+    });
   }
 
-  // Calibration
   const cal = bt.calibration || [];
   if (cal.length > 0) {
-    const expected = [55, 65, 75, 85];
-    const calCtx = document.getElementById('calChart');
-    if (calCtx) {
-      new Chart(calCtx, {
-        type: 'bar',
-        data: {
-          labels: cal.map(c => c.bin),
-          datasets: [
-            { label: 'Actual', data: cal.map(c => c.actual), backgroundColor: '#3b82f6' },
-            { label: 'Expected', data: expected.slice(0, cal.length), backgroundColor: '#64748b44', borderColor: '#64748b', borderWidth: 1 },
-          ]
-        },
-        options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, min: 40, max: 100 } } }
-      });
-    }
+    const ctx = document.getElementById('calChart');
+    if (ctx) new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: cal.map(c => c.bin),
+        datasets: [
+          { label: 'Actual', data: cal.map(c => c.actual), backgroundColor: '#448aff' },
+          { label: 'Expected', data: [55,65,75,85].slice(0,cal.length), backgroundColor: '#3a4a6444', borderColor: '#3a4a64', borderWidth: 1 },
+        ]
+      },
+      options: { ...base, scales: { ...base.scales, y: { ...base.scales.y, min: 40, max: 100 } } }
+    });
   }
 
-  // Monthly trend
   const mt = bt.monthlyTrend || [];
   if (mt.length > 0) {
-    const trendCtx = document.getElementById('trendChart');
-    if (trendCtx) {
-      new Chart(trendCtx, {
-        type: 'line',
-        data: {
-          labels: mt.map(m => m.month),
-          datasets: [{
-            label: 'Accuracy', data: mt.map(m => m.pct),
-            borderColor: '#a855f7', backgroundColor: '#a855f722',
-            fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: '#a855f7'
-          }]
-        },
-        options: {
-          ...chartDefaults,
-          scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, min: 50, max: 85 } },
-          plugins: { ...chartDefaults.plugins, legend: { display: false } }
-        }
-      });
-    }
+    const ctx = document.getElementById('trendChart');
+    if (ctx) new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: mt.map(m => m.month),
+        datasets: [{ data: mt.map(m => m.pct), borderColor: '#b388ff', backgroundColor: '#b388ff18', fill: true, tension: 0.3, pointRadius: 5, pointBackgroundColor: '#b388ff', borderWidth: 2 }]
+      },
+      options: { ...base, plugins: { legend: { display: false } },
+        scales: { ...base.scales, y: { ...base.scales.y, min: 50, max: 85 } } }
+    });
   }
 
-  // Ablation
   if (ablation.length > 0) {
     const sorted = [...ablation].sort((a, b) => a.winner - b.winner);
-    const ablCtx = document.getElementById('ablChart');
-    if (ablCtx) {
-      new Chart(ablCtx, {
-        type: 'bar',
-        data: {
-          labels: sorted.map(a => a.config.replace(/_/g, ' ')),
-          datasets: [{
-            label: 'Winner %', data: sorted.map(a => a.winner),
-            backgroundColor: sorted.map(a => a.delta >= 0 ? '#22c55e88' : '#ef444488'),
-            borderColor: sorted.map(a => a.delta >= 0 ? '#22c55e' : '#ef4444'),
-            borderWidth: 1
-          }]
-        },
-        options: {
-          ...chartDefaults, indexAxis: 'y',
-          scales: {
-            x: { ...chartDefaults.scales.x, min: 58, max: 70 },
-            y: { ...chartDefaults.scales.y, ticks: { ...chartDefaults.scales.y.ticks, font: { size: 9 } } }
-          },
-          plugins: { ...chartDefaults.plugins, legend: { display: false } }
-        }
-      });
-    }
+    const ctx = document.getElementById('ablChart');
+    if (ctx) new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: sorted.map(a => a.config.replace(/_/g, ' ')),
+        datasets: [{
+          data: sorted.map(a => a.winner),
+          backgroundColor: sorted.map(a => a.delta >= 0 ? '#00e67666' : '#ff525266'),
+          borderColor: sorted.map(a => a.delta >= 0 ? '#00e676' : '#ff5252'),
+          borderWidth: 1
+        }]
+      },
+      options: { ...base, indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: { x: { ...base.scales.x, min: 58, max: 70 }, y: { ...base.scales.y, ticks: { ...base.scales.y.ticks, font: { size: 9 } } } } }
+    });
   }
 }
 
-loadDashboard();
+init();
 </script>
 </body>
 </html>
